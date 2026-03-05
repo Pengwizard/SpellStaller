@@ -1,14 +1,28 @@
+using ItemChanger.Internal;
 using Modding;
+using SFCore;
 using SpellStaller.Charms;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace SpellStaller
 {
-    public partial class SpellStaller : Mod, IGlobalSettings<GlobalSettings>
+    public class SaveSettings
+    {
+        public Dictionary<string, EasyCharmState> Charms;
+    }
+
+    public partial class SpellStaller : Mod, IGlobalSettings<GlobalSettings>, ILocalSettings<SaveSettings>
     {
         private static SpellStaller _instance;
         public static GlobalSettings GS { get; set; } = new GlobalSettings();
 
+        internal SaveSettings localSettings = new SaveSettings();
+
+        internal Dictionary<string, EasyCharm> Charms = new Dictionary<string, EasyCharm>{
+            {SpellStabilizer.charmName, new SpellStabilizer()},
+        };
 
         internal static SpellStaller Instance
         {
@@ -35,11 +49,8 @@ namespace SpellStaller
 
             // put additional initialization logic here
 
-
-            On.HutongGames.PlayMaker.Actions.Wait.OnEnter += SpellStabalizer.ExtendFireballDuration;
-            On.HutongGames.PlayMaker.Actions.SetVelocityAsAngle.OnEnter += SpellStabalizer.SlowVengefulSpirit;
             On.HutongGames.PlayMaker.Actions.Wait.OnEnter += SoulShuttle.ApplySoulShuttle;
-            On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimationWithEvents.OnEnter += SpellStabalizer.EditScream;
+            On.HeroController.Update += HeroController_Update; 
 
             Log("Initialized");
         }
@@ -65,5 +76,62 @@ namespace SpellStaller
             return GS.LightBridge && isStallEnabled();
         }
 
+
+        private void HeroController_Update(On.HeroController.orig_Update orig, HeroController self)
+        {
+            orig(self);
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                Log("Giving Spell Stabalizer");
+                Charms["Spell Stabalizer"].GiveCharm(true);
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                Log("Taking Spell Stabalizer");
+                Charms["Spell Stabalizer"].TakeCharm();
+            }
+
+
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                Log("Giving Soul Shuttle");
+                Charms["Soul Shuttle"].GiveCharm(true);
+            }
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                Log("Taking Soul Shuttle");
+                Charms["Soul Shuttle"].TakeCharm();
+            }
+        }
+
+
+        public void OnLoadLocal(SaveSettings s)
+        {
+            localSettings = s;
+            if (s.Charms != null)
+            {
+                foreach (var kvp in s.Charms)
+                {
+                    if (Charms.TryGetValue(kvp.Key, out EasyCharm m))
+                    {
+                        m.RestoreCharmState(kvp.Value);
+                    }
+                }
+            }
+        }
+
+        public SaveSettings OnSaveLocal()
+        {
+            localSettings.Charms = new Dictionary<string, EasyCharmState>();
+            foreach (var kvp in Charms)
+            {
+                if (Charms.TryGetValue(kvp.Key, out EasyCharm m))
+                {
+                    localSettings.Charms[kvp.Key] = m.GetCharmState();
+                }
+            }
+            return localSettings;
+        }
     }
 }

@@ -1,28 +1,45 @@
-﻿using System;
-using HutongGames.PlayMaker.Actions;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using HutongGames.PlayMaker.Actions;
 using ItemChanger.Extensions;
 using KorzUtils.Helper;
-using SFCore.Utils;
+using SFCore;
+using System;
+using System.Collections;
+using UnityEngine;
 
 
 namespace SpellStaller.Charms
 {
-    public class SpellStabalizer
+    public class SpellStabilizer : EasyCharm
     {
+        private static string charmSprite = "Spell_Stabalizer";
+        public static string charmName = "Spell Stabalizer";
+        // TODO: After release make this description better?
+        private static string charmDescription = "Used by novice soul users to maintain control of spells.";
+        private static int defaultCost = 0;
+
         private const float Slowdown = 4f;
         // The zero index is there bc im lazy :pout:
         private static float[] WaitTimes = { 0f, 0.4f, 0.475f };
         private static float[] SlowSpeeds = { 0f, 1f, 0.1f };
         private static float[] DefaultSpeeds = { 0f, 40f, 45f };
+        public static int Num { get; set; }
 
-        private static bool ShouldStall()
+        public SpellStabilizer() : base()
+        {
+            ApplyHooks();
+        }
+
+        public void ApplyHooks()
+        {
+            On.HutongGames.PlayMaker.Actions.Wait.OnEnter += ExtendFireballDuration;
+            On.HutongGames.PlayMaker.Actions.SetVelocityAsAngle.OnEnter += SlowVengefulSpirit;
+            On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimationWithEvents.OnEnter += EditScream;
+        }
+
+        private bool ShouldStall()
         {
             // TODO: Check if charm is equiped?
-            return SpellStaller.Instance.isStallEnabled();
+            return IsEquipped;
         }
 
         public static int GetFireballLevel()
@@ -35,13 +52,13 @@ namespace SpellStaller.Charms
             return HeroController.instance.playerData.screamLevel;
         }
 
-        public static float GetFireballWaitTime(int spellLevel)
+        public float GetFireballWaitTime(int spellLevel)
         {
             var slowdown = ShouldStall() ? Slowdown : 1;
             return WaitTimes[spellLevel] * slowdown * SoulShuttle.GetWaitModifider();
         }
 
-        public static float GetFireballSpeed(int spellLevel)
+        public float GetFireballSpeed(int spellLevel)
         {
             // Shuttle speed takes priority
             if (SoulShuttle.ShuttleMode())
@@ -53,7 +70,7 @@ namespace SpellStaller.Charms
         }
 
 
-        public static void ExtendFireballDuration(On.HutongGames.PlayMaker.Actions.Wait.orig_OnEnter orig, Wait self)
+        public void ExtendFireballDuration(On.HutongGames.PlayMaker.Actions.Wait.orig_OnEnter orig, Wait self)
         {
             try
             {
@@ -72,7 +89,7 @@ namespace SpellStaller.Charms
             orig(self);
         }
 
-        public static void SlowVengefulSpirit(On.HutongGames.PlayMaker.Actions.SetVelocityAsAngle.orig_OnEnter orig, SetVelocityAsAngle self)
+        public void SlowVengefulSpirit(On.HutongGames.PlayMaker.Actions.SetVelocityAsAngle.orig_OnEnter orig, SetVelocityAsAngle self)
         {
             try
             {
@@ -127,7 +144,7 @@ namespace SpellStaller.Charms
             return HeroController.instance.transform.position + new Vector3(0f, 2f + GetScreamLevel());
         }
 
-        private static IEnumerator SpawnScreams(GameObject holder, Vector3 position)
+        private IEnumerator SpawnScreams(GameObject holder, Vector3 position)
         {
             yield return new WaitForSeconds(0f);
             GameObject scream = GameObject.Instantiate(GetScreamLevel() == 1 ? Scream : Shriek);
@@ -151,18 +168,41 @@ namespace SpellStaller.Charms
         }
 
 
-        public static void EditScream(
+        public void EditScream(
             On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimationWithEvents.orig_OnEnter orig,
             HutongGames.PlayMaker.Actions.Tk2dPlayAnimationWithEvents self)
         {
-            if (self.IsCorrectContext("Spell Control", "Knight", null) &&
-                (self.State.Name == "Scream End" || self.State.Name == "Scream End 2"))
+            if (ShouldStall())
             {
-                GameObject screamHolder = new("Persistent Scream");
-                screamHolder.SetActive(true);
-                screamHolder.AddComponent<Dummy>().StartCoroutine(SpawnScreams(screamHolder, ScreamSpawnPosition()));
+                if (self.IsCorrectContext("Spell Control", "Knight", null) &&
+                    (self.State.Name == "Scream End" || self.State.Name == "Scream End 2"))
+                {
+                    GameObject screamHolder = new("Persistent Scream");
+                    screamHolder.SetActive(true);
+                    screamHolder.AddComponent<Dummy>().StartCoroutine(SpawnScreams(screamHolder, ScreamSpawnPosition()));
+                }
             }
             orig(self);
+        }
+
+        protected override Sprite GetSpriteInternal()
+        {
+            return new EmbeddedSprite(SpellStabilizer.charmSprite).Value;
+        }
+
+        protected override string GetName()
+        {
+            return SpellStabilizer.charmName;
+        }
+
+        protected override string GetDescription()
+        {
+            return SpellStabilizer.charmDescription;
+        }
+
+        protected override int GetCharmCost()
+        {
+            return SpellStabilizer.defaultCost;
         }
     }
 }

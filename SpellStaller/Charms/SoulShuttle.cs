@@ -48,7 +48,7 @@ namespace SpellStaller.Charms
             {
                 xOffset = 5f;
             }
-            return HeroController.instance.transform.position + new Vector3(xOffset, -(1f + SpellStabalizer.GetFireballLevel()));
+            return HeroController.instance.transform.position + new Vector3(xOffset, -(1f + SpellStabilizer.GetFireballLevel()));
         }
 
         public static void UpdateFireballObjectForShuttle(GameObject gameObj)

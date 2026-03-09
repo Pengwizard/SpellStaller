@@ -11,8 +11,8 @@ namespace SpellStaller.Charms
 {
     public class SpellStabilizer : EasyCharm
     {
-        private static string charmSprite = "Spell_Stabalizer";
-        public static string charmName = "Spell Stabalizer";
+        private static string charmSprite = "SpellStabilizer";
+        public static string charmName = "Spell Stabilizer";
         // TODO: After release make this description better?
         private static string charmDescription = "Used by novice soul users to maintain control of spells.";
         private static int defaultCost = 0;
@@ -52,18 +52,24 @@ namespace SpellStaller.Charms
             return HeroController.instance.playerData.screamLevel;
         }
 
+        private SoulShuttle GetSoulShuttleCharm()
+        {
+            return (SpellStaller.Instance.GetCharmByName(SoulShuttle.charmName) as SoulShuttle);
+        }
+
         public float GetFireballWaitTime(int spellLevel)
         {
             var slowdown = ShouldStall() ? Slowdown : 1;
-            return WaitTimes[spellLevel] * slowdown * SoulShuttle.GetWaitModifider();
+            var shuttleWaitTime = GetSoulShuttleCharm().GetWaitModifider();
+            return WaitTimes[spellLevel] * slowdown * shuttleWaitTime;
         }
 
         public float GetFireballSpeed(int spellLevel)
         {
             // Shuttle speed takes priority
-            if (SoulShuttle.ShuttleMode())
+            if (GetSoulShuttleCharm().ShuttleMode())
             {
-                return SoulShuttle.GetShuttleSpeed();
+                return GetSoulShuttleCharm().GetShuttleSpeed();
             }
 
             return ShouldStall() ? SlowSpeeds[spellLevel] : DefaultSpeeds[spellLevel];

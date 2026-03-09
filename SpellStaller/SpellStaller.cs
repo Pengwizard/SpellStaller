@@ -22,7 +22,13 @@ namespace SpellStaller
 
         internal Dictionary<string, EasyCharm> Charms = new Dictionary<string, EasyCharm>{
             {SpellStabilizer.charmName, new SpellStabilizer()},
+            {SoulShuttle.charmName, new SoulShuttle()}
         };
+
+        public EasyCharm GetCharmByName(string charmName)
+        {
+            return Charms[charmName];
+        }
 
         internal static SpellStaller Instance
         {
@@ -49,7 +55,6 @@ namespace SpellStaller
 
             // put additional initialization logic here
 
-            On.HutongGames.PlayMaker.Actions.Wait.OnEnter += SoulShuttle.ApplySoulShuttle;
             On.HeroController.Update += HeroController_Update; 
 
             Log("Initialized");
@@ -80,28 +85,17 @@ namespace SpellStaller
         private void HeroController_Update(On.HeroController.orig_Update orig, HeroController self)
         {
             orig(self);
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                Log("Giving Spell Stabalizer");
-                Charms["Spell Stabalizer"].GiveCharm(true);
-            }
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                Log("Taking Spell Stabalizer");
-                Charms["Spell Stabalizer"].TakeCharm();
+                Log("Giving Spell Stabilizer");
+                Charms["Spell Stabilizer"].GiveCharm(true);
             }
 
 
-
-            if (Input.GetKeyDown(KeyCode.M))
+            if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 Log("Giving Soul Shuttle");
                 Charms["Soul Shuttle"].GiveCharm(true);
-            }
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                Log("Taking Soul Shuttle");
-                Charms["Soul Shuttle"].TakeCharm();
             }
         }
 

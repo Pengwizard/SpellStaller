@@ -1,12 +1,7 @@
-﻿using System;
-using HutongGames.PlayMaker.Actions;
+﻿using HutongGames.PlayMaker.Actions;
+using SFCore;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using ItemChanger.Extensions;
-using KorzUtils.Helper;
-using SFCore.Utils;
 
 namespace SpellStaller.Charms
 {
@@ -14,14 +9,25 @@ namespace SpellStaller.Charms
 
     // Charm that makes VS/Shade Souls into solid platforms.
     // Takes priority over the Spell Stabalizer charm in the speed of the fireball.
-    public class SoulShuttle
+    public class SoulShuttle : EasyCharm
     {
-        public static bool ShuttleMode()
+        private static string charmSprite = "SoulShuttle";
+        public static string charmName = "Soul Shuttle";
+        // TODO: After release make this description better?
+        private static string charmDescription = "Condenses the user's soul projection's further, to the point of being a solid object.";
+        private static int defaultCost = 0;
+
+        public SoulShuttle() : base()
         {
-            return SpellStaller.Instance.LightBridgeMode();
+            ApplyHooks();
         }
 
-        public static float GetWaitModifider()
+        public bool ShuttleMode()
+        {
+            return IsEquipped;
+        }
+
+        public float GetWaitModifider()
         {
             if (ShuttleMode())
             {
@@ -31,12 +37,18 @@ namespace SpellStaller.Charms
             return 1f;
         }
 
-        public static float GetShuttleSpeed()
+        public float GetShuttleSpeed()
         {
             return 13f;
         }
 
-        public static Vector3 LightbridgeSpawnPosition(GameObject fireball)
+        public void ApplyHooks()
+        {
+            On.HutongGames.PlayMaker.Actions.Wait.OnEnter += ApplySoulShuttle;
+        }
+
+
+        public Vector3 LightbridgeSpawnPosition(GameObject fireball)
         {
             var heroPosition = HeroController.instance.transform.position;
             float xOffset = 0;
@@ -51,7 +63,7 @@ namespace SpellStaller.Charms
             return HeroController.instance.transform.position + new Vector3(xOffset, -(1f + SpellStabilizer.GetFireballLevel()));
         }
 
-        public static void UpdateFireballObjectForShuttle(GameObject gameObj)
+        public void UpdateFireballObjectForShuttle(GameObject gameObj)
         {
             // Makes the fireball a solid terrain.
             try
@@ -82,7 +94,7 @@ namespace SpellStaller.Charms
         }
 
 
-        public static void ApplySoulShuttle(On.HutongGames.PlayMaker.Actions.Wait.orig_OnEnter orig, Wait self)
+        public void ApplySoulShuttle(On.HutongGames.PlayMaker.Actions.Wait.orig_OnEnter orig, Wait self)
         {
             try
             {
@@ -96,6 +108,27 @@ namespace SpellStaller.Charms
                 SpellStaller.Instance.LogError(err.ToString());
             }
             orig(self);
+        }
+
+
+        protected override Sprite GetSpriteInternal()
+        {
+            return new EmbeddedSprite(SoulShuttle.charmSprite).Value;
+        }
+
+        protected override string GetName()
+        {
+            return SoulShuttle.charmName;
+        }
+
+        protected override string GetDescription()
+        {
+            return SoulShuttle.charmDescription;
+        }
+
+        protected override int GetCharmCost()
+        {
+            return SoulShuttle.defaultCost;
         }
     }
 }

@@ -44,12 +44,12 @@ namespace SpellStaller.Charms
 
         public static int GetFireballLevel()
         {
-            return HeroController.instance.playerData.fireballLevel;
+            return HeroController.instance.playerData.GetInt("fireballLevel");
         }
 
         private static int GetScreamLevel()
         {
-            return HeroController.instance.playerData.screamLevel;
+            return HeroController.instance.playerData.GetInt("screamLevel");
         }
 
         private SoulShuttle GetSoulShuttleCharm()
@@ -85,7 +85,6 @@ namespace SpellStaller.Charms
                     self.State.Name == "Idle")
                 {
                     self.time.Value = GetFireballWaitTime(GetFireballLevel());
-                    SpellStaller.Instance.Log($"New duration is: {self.time.Value}");
                 }
             }
             catch (Exception err)

@@ -20,7 +20,7 @@ namespace SpellStaller
 
         internal SaveSettings localSettings = new SaveSettings();
 
-        internal Dictionary<string, EasyCharm> Charms = new Dictionary<string, EasyCharm>{
+        public Dictionary<string, EasyCharm> Charms = new Dictionary<string, EasyCharm>{
             {SpellStabilizer.charmName, new SpellStabilizer()},
             {SoulShuttle.charmName, new SoulShuttle()}
         };
@@ -55,7 +55,15 @@ namespace SpellStaller
 
             // put additional initialization logic here
 
-            On.HeroController.Update += HeroController_Update; 
+            On.HeroController.Update += HeroController_Update;
+
+            bool rando = ModHooks.GetMod("Randomizer 4") is Mod;
+            bool ic = ModHooks.GetMod("ItemChangerMod") is Mod;
+
+            if (rando && ic)
+            {
+                RandoItem.InitRandoConnection();
+            }
 
             Log("Initialized");
         }
@@ -81,21 +89,24 @@ namespace SpellStaller
             return GS.LightBridge && isStallEnabled();
         }
 
+        public void GiveCharm(string charmName)
+        {
+            Charms[charmName].GiveCharm(true);
+        }
+
 
         private void HeroController_Update(On.HeroController.orig_Update orig, HeroController self)
         {
             orig(self);
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                Log("Giving Spell Stabilizer");
-                Charms["Spell Stabilizer"].GiveCharm(true);
+                GiveCharm(SpellStabilizer.charmName);
             }
 
 
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                Log("Giving Soul Shuttle");
-                Charms["Soul Shuttle"].GiveCharm(true);
+                GiveCharm(SoulShuttle.charmName);
             }
         }
 

@@ -3,3 +3,6 @@ ItemChanger
 KorzUtils
 SFCore
 Vasi
+Randomizer 4
+RandomizerCore
+RandomizerCore.Json

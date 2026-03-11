@@ -19,7 +19,7 @@ namespace SpellStaller.Charms
 
         public SoulShuttle() : base()
         {
-            ApplyHooks();
+            // ApplyHooks();
         }
 
         public bool ShuttleMode()
@@ -73,6 +73,9 @@ namespace SpellStaller.Charms
                     gameObj.layer = LayerMask.NameToLayer("Terrain");
                     gameObj.transform.position = LightbridgeSpawnPosition(gameObj);
                     // gameObj.AddComponent<Dummy>().StartCoroutine(SpawnLightBridge(gameObj));
+
+                    gameObj.GetComponent<BoxCollider2D>().isTrigger = false;
+                    gameObj.GetComponent<Rigidbody2D>().isKinematic = true;
                 }
                 else
                 {
@@ -83,9 +86,9 @@ namespace SpellStaller.Charms
                         Component.Destroy(gameObj.GetComponent<Dummy>());
                     }
 
+                    gameObj.GetComponent<BoxCollider2D>().isTrigger = true;
+                    gameObj.GetComponent<Rigidbody2D>().isKinematic = false;
                 }
-                gameObj.GetComponent<BoxCollider2D>().isTrigger = !ShuttleMode();
-                gameObj.GetComponent<Rigidbody2D>().isKinematic = ShuttleMode();
             }
             catch (Exception err)
             {

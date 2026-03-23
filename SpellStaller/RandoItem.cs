@@ -3,6 +3,7 @@ using ItemChanger.Locations;
 using ItemChanger.UIDefs;
 using RandomizerCore.Logic;
 using RandomizerCore.LogicItems;
+using RandomizerCore.StringItems;
 using RandomizerMod.RC;
 using RandomizerMod.Settings;
 using SFCore;
@@ -46,7 +47,6 @@ namespace SpellStaller
             {
                 rb.AddItemByName(entry.Key.Replace(" ", "_"));
             }
-
         }
 
         private static void AddItemAndLogic(GenerationSettings gs, LogicManagerBuilder lmb)
@@ -54,7 +54,9 @@ namespace SpellStaller
             var charms = SpellStaller.Instance.Charms;
             foreach (var entry in charms)
             {
-                lmb.AddItem(new EmptyItem(entry.Key.Replace(" ", "_")));
+                var sk = entry.Key.Replace(" ", "_");
+                Term term = lmb.GetOrAddTerm(sk, TermType.Int);
+                lmb.AddItem(new StringItemTemplate(sk, $"`{sk}<1` => CHARMS++ >> {sk}++"));
             }
         }
     }

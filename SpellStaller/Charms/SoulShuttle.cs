@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace SpellStaller.Charms
 {
-    internal class Dummy : MonoBehaviour { }
 
     // Charm that makes VS/Shade Souls into solid platforms.
     // Takes priority over the Spell Stabalizer charm in the speed of the fireball.

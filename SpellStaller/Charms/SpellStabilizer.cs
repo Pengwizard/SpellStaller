@@ -9,10 +9,12 @@ using UnityEngine;
 
 namespace SpellStaller.Charms
 {
+    internal class Dummy : MonoBehaviour { }
     public class SpellStabilizer : EasyCharm
     {
         private static string charmSprite = "SpellStabilizer";
         public static string charmName = "Spell Stabilizer";
+        public static string GetTermName() => charmName.Replace(" ", "_").ToUpper();
         // TODO: After release make this description better?
         private static string charmDescription = "Used by novice soul users to maintain control of spells.";
         private static int defaultCost = 0;

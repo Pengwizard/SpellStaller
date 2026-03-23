@@ -22,6 +22,7 @@ namespace SpellStaller
 
         public Dictionary<string, EasyCharm> Charms = new Dictionary<string, EasyCharm>{
             {SpellStabilizer.charmName, new SpellStabilizer()},
+            {DreamSifter.charmName, new DreamSifter()},
             {SoulShuttle.charmName, new SoulShuttle()}
         };
 
@@ -106,7 +107,7 @@ namespace SpellStaller
 
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                GiveCharm(SoulShuttle.charmName);
+                GiveCharm(DreamSifter.charmName);
             }
         }
 

@@ -102,6 +102,8 @@ namespace SpellStaller
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 GiveCharm(SpellStabilizer.charmName);
+                GiveCharm(DreamSifter.charmName);
+                GiveCharm(SoulShuttle.charmName);
             }
 
 

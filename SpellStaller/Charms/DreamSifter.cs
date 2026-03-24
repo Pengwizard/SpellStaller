@@ -3,11 +3,12 @@ using ItemChanger;
 using ItemChanger.Extensions;
 using ItemChanger.FsmStateActions;
 using ItemChanger.Internal;
+using KorzUtils.Helper;
 using SFCore;
 using System;
-using UnityEngine;
 using System;
 using System.Collections;
+using UnityEngine;
 
 namespace SpellStaller.Charms
 {
@@ -54,7 +55,7 @@ namespace SpellStaller.Charms
 
             IEnumerator Routine()
             {
-                yield return new WaitForSeconds(30f);
+                yield return new WaitForSeconds(10f);
                 foreach (var o in objs)
                 {
                     Destroy(o);
@@ -74,7 +75,7 @@ namespace SpellStaller.Charms
         private static string charmSprite = "SoulShuttle";
         public static string charmName = "Dream Sifter";
         // TODO: After release make this description better?
-        private static string charmDescription = "A circle of fine dream-thread mesh, with specks of Soul stuck to it.<br><br>Allows a dream-nail wielder to gather Soul from thin air.";
+        private static string charmDescription = "A circle shell-like material, with a fine dream-thread mesh.<br><br>Allows a user to collect scattered Soul from the air of Hallownest.";
         private static int defaultCost = 0;
 
         public DreamSifter() : base()
@@ -84,7 +85,7 @@ namespace SpellStaller.Charms
 
         public bool AllowSifting()
         {
-            return IsEquipped;
+            return IsEquipped && GameManager.instance.GetCurrentMapZone() != "DREAM_WORLD";
         }
 
         private void HookDreamSifter(PlayMakerFSM fsm)
@@ -94,9 +95,16 @@ namespace SpellStaller.Charms
 
         private void AddSoul()
         {
-            if (AllowSifting())
+            if (IsEquipped)
             {
-                SoulOrbSpawner.SpawnSoul(HeroController.instance.transform);
+                if (AllowSifting())
+                {
+                    SoulOrbSpawner.SpawnSoul(HeroController.instance.transform);
+                }
+                else
+                {
+                    GameHelper.DisplayMessage("The air here doesn't have any scattered Soul...");
+                }
             }
         }
 

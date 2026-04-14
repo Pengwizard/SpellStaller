@@ -24,4 +24,5 @@ namespace SpellStaller
         public Sprite Value => EmbeddedSpriteManager.GetSprite(key);
         public ISprite Clone() => (ISprite)MemberwiseClone();
     }
+
 }

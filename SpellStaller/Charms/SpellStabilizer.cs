@@ -185,9 +185,9 @@ namespace SpellStaller.Charms
                     (self.State.Name == "Scream End" || self.State.Name == "Scream End 2"))
                 {
                     GameObject screamHolder = new("Persistent Scream");
-                    screamHolder.SetActive(true);
-                    screamHolder.AddComponent<Dummy>().StartCoroutine(SpawnScreams(screamHolder, ScreamSpawnPosition()));
-                }
+                screamHolder.SetActive(true);
+                screamHolder.AddComponent<Dummy>().StartCoroutine(SpawnScreams(screamHolder, ScreamSpawnPosition()));
+            }
             }
             orig(self);
         }

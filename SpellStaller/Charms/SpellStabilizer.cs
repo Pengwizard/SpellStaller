@@ -170,7 +170,7 @@ namespace SpellStaller.Charms
                 scream.SetActive(true);
                 yield return new WaitForSeconds(0.35f);
                 i++;
-            } while (i < (10 * GetScreamLevel()));
+            } while (i < (10));
             GameObject.Destroy(holder);
         }
 

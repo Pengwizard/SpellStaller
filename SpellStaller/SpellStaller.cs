@@ -103,13 +103,6 @@ namespace SpellStaller
             {
                 GiveCharm(SpellStabilizer.charmName);
                 GiveCharm(DreamSifter.charmName);
-                GiveCharm(SoulShuttle.charmName);
-            }
-
-
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                GiveCharm(DreamSifter.charmName);
             }
         }
 

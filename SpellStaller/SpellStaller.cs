@@ -31,7 +31,7 @@ namespace SpellStaller
             return Charms[charmName];
         }
 
-        internal static SpellStaller Instance
+        public static SpellStaller Instance
         {
             get
             {
@@ -55,6 +55,8 @@ namespace SpellStaller
             Log("Initializing");
 
             // put additional initialization logic here
+
+            //Charms 
 
             On.HeroController.Update += HeroController_Update;
 

@@ -80,7 +80,27 @@ namespace SpellStaller.Charms
 
         public DreamSifter() : base()
         {
-            ApplyHooks();
+            //ApplyHooks();
+            On.HutongGames.PlayMaker.Actions.ActivateGameObject.OnEnter += OnEnterDreamNailEnd;
+        }
+
+        private void OnEnterDreamNailEnd(On.HutongGames.PlayMaker.Actions.ActivateGameObject.orig_OnEnter orig, HutongGames.PlayMaker.Actions.ActivateGameObject self)
+        {
+            orig(self);
+
+            try
+            {
+                if (self.Fsm.FsmComponent.gameObject.name.Contains("Knight") &&
+                    self.Fsm.Name == "Dream Nail" &&
+                    self.State.Name == "End")
+                {
+                    AddSoul();
+                }
+            }
+            catch (Exception err)
+            {
+                SpellStaller.Instance.LogError(err.ToString());
+            }
         }
 
         public bool AllowSifting()
@@ -88,13 +108,10 @@ namespace SpellStaller.Charms
             return IsEquipped && GameManager.instance.GetCurrentMapZone() != "DREAM_WORLD";
         }
 
-        private void HookDreamSifter(PlayMakerFSM fsm)
-        {
-            fsm.GetState("End").AddFirstAction(new Lambda(AddSoul));
-        }
-
         private void AddSoul()
         {
+            SpellStaller.Instance.LogError("hook");
+            GameHelper.DisplayMessage("Go go dream sifter!");
             if (IsEquipped)
             {
                 if (AllowSifting())
@@ -106,11 +123,8 @@ namespace SpellStaller.Charms
                     GameHelper.DisplayMessage("The air here doesn't have any scattered Soul...");
                 }
             }
-        }
-
-        public void ApplyHooks()
-        {
-            Events.AddFsmEdit(dreamNailId, HookDreamSifter);
+            GameHelper.DisplayMessage("dream sifter done!");
+            SpellStaller.Instance.LogError("done hook");
         }
 
         protected override Sprite GetSpriteInternal()

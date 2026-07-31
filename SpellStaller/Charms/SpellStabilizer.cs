@@ -26,6 +26,9 @@ namespace SpellStaller.Charms
         private static float[] DefaultSpeeds = { 0f, 40f, 45f };
         public static int Num { get; set; }
 
+        public static Func<bool> ShouldFizzle = () => { return false; };
+        public static Func<bool> ShouldForceStall = () => { return false; };
+
         public SpellStabilizer() : base()
         {
             ApplyHooks();
@@ -41,7 +44,7 @@ namespace SpellStaller.Charms
         private bool ShouldStall()
         {
             // TODO: Check if charm is equiped?
-            return IsEquipped;
+            return IsEquipped || ShouldForceStall();
         }
 
         public static int GetFireballLevel()
@@ -86,7 +89,14 @@ namespace SpellStaller.Charms
                     self.Fsm.Name == "Fireball Control" &&
                     self.State.Name == "Idle")
                 {
-                    self.time.Value = GetFireballWaitTime(GetFireballLevel());
+                    if (ShouldFizzle())
+                    {
+                        GameHelper.DisplayMessage("The spell fizzles, scattering into unfocused Soul...");
+                        self.time.Value = 0;
+                    } else
+                    {
+                        self.time.Value = GetFireballWaitTime(GetFireballLevel());
+                    }
                 }
             }
             catch (Exception err)
@@ -104,7 +114,14 @@ namespace SpellStaller.Charms
                     self.Fsm.FsmComponent.gameObject.name.Contains("Top") &&
                     self.Fsm.Name == "Fireball Cast")
                 {
-                    self.speed.Value = GetFireballSpeed(GetFireballLevel());
+                    if (ShouldFizzle())
+                    {
+                        self.speed.Value = 0;
+                    }
+                    else
+                    {
+                        self.speed.Value = GetFireballSpeed(GetFireballLevel());
+                    }
                 }
             }
             catch (Exception err)

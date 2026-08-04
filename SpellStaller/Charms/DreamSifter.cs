@@ -8,6 +8,7 @@ using SFCore;
 using System;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SpellStaller.Charms
@@ -103,15 +104,25 @@ namespace SpellStaller.Charms
             }
         }
 
+        public static List<string> overrideRooms = new() {"dream_nailcollection"};
+
+        public bool CheckDreammail()
+        {
+            if (GameManager.instance.GetCurrentMapZone() != "DREAM_WORLD")
+            {
+                return true;
+            }
+
+            return overrideRooms.Contains(GameManager.instance.sceneName.ToLower());
+        }
+
         public bool AllowSifting()
         {
-            return IsEquipped && GameManager.instance.GetCurrentMapZone() != "DREAM_WORLD";
+            return IsEquipped && CheckDreammail();
         }
 
         private void AddSoul()
         {
-            SpellStaller.Instance.LogError("hook");
-            GameHelper.DisplayMessage("Go go dream sifter!");
             if (IsEquipped)
             {
                 if (AllowSifting())
@@ -123,8 +134,6 @@ namespace SpellStaller.Charms
                     GameHelper.DisplayMessage("The air here doesn't have any scattered Soul...");
                 }
             }
-            GameHelper.DisplayMessage("dream sifter done!");
-            SpellStaller.Instance.LogError("done hook");
         }
 
         protected override Sprite GetSpriteInternal()

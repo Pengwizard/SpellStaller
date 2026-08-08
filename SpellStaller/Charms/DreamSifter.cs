@@ -28,10 +28,15 @@ namespace SpellStaller.Charms
             int soulToGive = 17;
             int masksToHeal = 1;
 
-            if (PlayerData.instance.hasDreamGate)
+            if (PlayerData.instance.dreamNailUpgraded)
             {
                 soulToGive *= 9;
                 masksToHeal = 11;
+            }
+            else if (PlayerData.instance.hasDreamGate)
+            {
+                soulToGive *= 4;
+                masksToHeal = 4;
             }
             else if (PlayerData.instance.equippedCharm_30)
             {

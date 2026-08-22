@@ -16,7 +16,7 @@ namespace SpellStaller.Charms
         public static string charmName = "Spell Stabilizer";
         public static string GetTermName() => charmName.Replace(" ", "_").ToUpper();
         // TODO: After release make this description better?
-        private static string charmDescription = "Used by novice soul users to maintain control of spells.";
+        private static string charmDescription = "Used by novice soul users to maintain control of spells.\r\n\r\nDespite this being a charm, Salubra doesn't recognize it as such.";
         private static int defaultCost = 0;
 
         private const float Slowdown = 4f;

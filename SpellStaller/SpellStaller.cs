@@ -58,7 +58,7 @@ namespace SpellStaller
 
             //Charms 
 
-            On.HeroController.Update += HeroController_Update;
+            //On.HeroController.Update += HeroController_Update;
 
             bool rando = ModHooks.GetMod("Randomizer 4") is Mod;
             bool ic = ModHooks.GetMod("ItemChangerMod") is Mod;

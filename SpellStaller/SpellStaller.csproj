@@ -44,8 +44,10 @@
     <None Remove="build.yml" />
     <None Remove="dependabot.yml" />
     <None Remove="README.md" />
+    <None Remove="Resources\DreamSifter.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\DreamSifter.png" />
     <EmbeddedResource Include="Resources\SoulShuttle.png" />
     <EmbeddedResource Include="Resources\SpellStabilizer.png" />
   </ItemGroup>

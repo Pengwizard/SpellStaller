@@ -78,10 +78,10 @@ namespace SpellStaller.Charms
     {
         private static readonly FsmID dreamNailId = new("Knight", "Dream Nail");
 
-        private static string charmSprite = "SoulShuttle";
+        private static string charmSprite = "DreamSifter";
         public static string charmName = "Dream Sifter";
         // TODO: After release make this description better?
-        private static string charmDescription = "A circle shell-like material, with a fine dream-thread mesh.<br><br>Allows a user to collect scattered Soul from the air of Hallownest.";
+        private static string charmDescription = "Made from a circle of shell-like material, with a fine dream-thread mesh inside.\r\n\r\nAllows a user to collect scattered Soul from the air of Hallownest.\r\n\r\nDespite this being a charm, Salubra doesn't recognize it as such.";
         private static int defaultCost = 0;
 
         public DreamSifter() : base()

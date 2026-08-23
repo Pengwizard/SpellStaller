@@ -57,26 +57,14 @@ namespace SpellStaller.Charms
             return HeroController.instance.playerData.GetInt("screamLevel");
         }
 
-        private SoulShuttle GetSoulShuttleCharm()
-        {
-            return (SpellStaller.Instance.GetCharmByName(SoulShuttle.charmName) as SoulShuttle);
-        }
-
         public float GetFireballWaitTime(int spellLevel)
         {
             var slowdown = ShouldStall() ? Slowdown : 1;
-            var shuttleWaitTime = GetSoulShuttleCharm().GetWaitModifider();
-            return WaitTimes[spellLevel] * slowdown * shuttleWaitTime;
+            return WaitTimes[spellLevel] * slowdown;
         }
 
         public float GetFireballSpeed(int spellLevel)
         {
-            // Shuttle speed takes priority
-            if (GetSoulShuttleCharm().ShuttleMode())
-            {
-                return GetSoulShuttleCharm().GetShuttleSpeed();
-            }
-
             return ShouldStall() ? SlowSpeeds[spellLevel] : DefaultSpeeds[spellLevel];
         }
 

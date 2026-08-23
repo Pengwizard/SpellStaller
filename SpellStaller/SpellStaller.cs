@@ -23,7 +23,7 @@ namespace SpellStaller
         public Dictionary<string, EasyCharm> Charms = new Dictionary<string, EasyCharm>{
             {SpellStabilizer.charmName, new SpellStabilizer()},
             {DreamSifter.charmName, new DreamSifter()},
-            {SoulShuttle.charmName, new SoulShuttle()}
+            {GorbsMemento.charmName, new GorbsMemento()}
         };
 
         public EasyCharm GetCharmByName(string charmName)
@@ -58,7 +58,7 @@ namespace SpellStaller
 
             //Charms 
 
-            //On.HeroController.Update += HeroController_Update;
+            On.HeroController.Update += HeroController_Update;
 
             bool rando = ModHooks.GetMod("Randomizer 4") is Mod;
             bool ic = ModHooks.GetMod("ItemChangerMod") is Mod;
@@ -105,6 +105,7 @@ namespace SpellStaller
             {
                 GiveCharm(SpellStabilizer.charmName);
                 GiveCharm(DreamSifter.charmName);
+                GiveCharm(GorbsMemento.charmName);
             }
         }
 

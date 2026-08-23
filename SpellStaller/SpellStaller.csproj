@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\DreamSifter.png" />
+    <EmbeddedResource Include="Resources\Gorb%27sMemento.png" />
     <EmbeddedResource Include="Resources\SoulShuttle.png" />
     <EmbeddedResource Include="Resources\SpellStabilizer.png" />
   </ItemGroup>

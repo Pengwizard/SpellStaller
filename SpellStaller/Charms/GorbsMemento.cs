@@ -1,6 +1,4 @@
-﻿using HutongGames.PlayMaker.Actions;
-using SFCore;
-using System;
+﻿using SFCore;
 using UnityEngine;
 
 namespace SpellStaller.Charms
@@ -8,7 +6,7 @@ namespace SpellStaller.Charms
 
     public class GorbsMemento : EasyCharm
     {
-        private static string charmSprite = "GorbsMemento";
+        private static string charmSprite = "Gorb'sMemento";
         public static string charmName = "Gorb's Memento";
         // TODO: After release make this description better?
         private static string charmDescription = "A circlet inscribed with wisdoms from The Great Mind.\r\n\r\n\"If one aims to fully ascend, they must first remove DIVE as an option.\"- The Great Mind";

@@ -6,3 +6,4 @@ Vasi
 Randomizer 4
 RandomizerCore
 RandomizerCore.Json
+RandoSettingsManager

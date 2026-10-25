@@ -1,10 +1,10 @@
+using System;
+using System.Collections.Generic;
 using ItemChanger.Internal;
 using Modding;
 using SFCore;
 using SpellStaller.Charms;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+using SpellStaller.Rando;
 
 namespace SpellStaller
 {
@@ -13,12 +13,12 @@ namespace SpellStaller
         public Dictionary<string, EasyCharmState> Charms;
     }
 
-    public partial class SpellStaller : Mod, IGlobalSettings<GlobalSettings>, ILocalSettings<SaveSettings>
+    public partial class SpellStaller : Mod, IGlobalSettings<Rando.GlobalSettings>, ILocalSettings<Rando.LocalSettings>
     {
         private static SpellStaller _instance;
-        public static GlobalSettings GS { get; set; } = new GlobalSettings();
+        public static Rando.GlobalSettings GS { get; set; } = new Rando.GlobalSettings();
+        public static Rando.LocalSettings LS { get; set; } = new();
 
-        internal SaveSettings localSettings = new SaveSettings();
 
         public Dictionary<string, EasyCharm> Charms = new Dictionary<string, EasyCharm>{
             {SpellStabilizer.charmName, new SpellStabilizer()},
@@ -58,61 +58,31 @@ namespace SpellStaller
 
             //Charms 
 
-            On.HeroController.Update += HeroController_Update;
+            //On.HeroController.Update += HeroController_Update;
 
             bool rando = ModHooks.GetMod("Randomizer 4") is Mod;
             bool ic = ModHooks.GetMod("ItemChangerMod") is Mod;
 
-            if (rando && ic)
-            {
-                RandoItem.InitRandoConnection();
-            }
+            RandoInterop.Hook();
 
             Log("Initialized");
         }
 
 
-        // Global Settings Stuff
-        public void OnLoadGlobal(GlobalSettings s) => GS = s;
+        public Rando.GlobalSettings OnSaveGlobal() => GS;
+        public void OnLoadGlobal(Rando.GlobalSettings s) => GS = s;
 
-        public GlobalSettings OnSaveGlobal() => GS;
-
-        public bool isStallEnabled()
-        {
-            return GS.Enabled;
-        }
-
-        public bool isDamageEnabled()
-        {
-            return GS.ShouldDamage;
-        }
-
-        public bool LightBridgeMode()
-        {
-            return GS.LightBridge && isStallEnabled();
-        }
+        //public void OnLoadLocal(Rando.LocalSettings s) => LS = s;
+        //public Rando.LocalSettings OnSaveLocal() => LS;
 
         public void GiveCharm(string charmName)
         {
             Charms[charmName].GiveCharm(true);
         }
 
-
-        private void HeroController_Update(On.HeroController.orig_Update orig, HeroController self)
+        public void OnLoadLocal(Rando.LocalSettings s)
         {
-            orig(self);
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                GiveCharm(SpellStabilizer.charmName);
-                GiveCharm(DreamSifter.charmName);
-                GiveCharm(GorbsMemento.charmName);
-            }
-        }
-
-
-        public void OnLoadLocal(SaveSettings s)
-        {
-            localSettings = s;
+            LS = s;
             if (s.Charms != null)
             {
                 foreach (var kvp in s.Charms)
@@ -125,17 +95,17 @@ namespace SpellStaller
             }
         }
 
-        public SaveSettings OnSaveLocal()
+        public Rando.LocalSettings OnSaveLocal()
         {
-            localSettings.Charms = new Dictionary<string, EasyCharmState>();
+            LS.Charms = new Dictionary<string, EasyCharmState>();
             foreach (var kvp in Charms)
             {
                 if (Charms.TryGetValue(kvp.Key, out EasyCharm m))
                 {
-                    localSettings.Charms[kvp.Key] = m.GetCharmState();
+                    LS.Charms[kvp.Key] = m.GetCharmState();
                 }
             }
-            return localSettings;
+            return LS;
         }
     }
 }

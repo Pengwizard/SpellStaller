@@ -64,6 +64,7 @@ namespace SpellStaller.Rando
             InteropTag tag = obj.GetOrAddTag<InteropTag>();
             tag.Message = "RandoSupplementalMetadata";
             tag.Properties["ModSource"] = SpellStaller.Instance.GetName();
+            tag.Properties["PoolGroup"] = "Charms";
 
             return tag;
         }

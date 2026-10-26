@@ -7,3 +7,4 @@ Randomizer 4
 RandomizerCore
 RandomizerCore.Json
 RandoSettingsManager
+DebugMod

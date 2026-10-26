@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DebugMod;
 using ItemChanger.Internal;
 using Modding;
 using SFCore;
@@ -29,6 +31,12 @@ namespace SpellStaller
         public EasyCharm GetCharmByName(string charmName)
         {
             return Charms[charmName];
+        }
+
+        private void CountOurCharms(On.PlayerData.orig_CountCharms orig, PlayerData self)
+        {
+            orig(self);
+            self.SetInt("charmsOwned", self.GetInt("charmsOwned") + Charms.Count(c => c.Value.GotCharm));
         }
 
         public static SpellStaller Instance
@@ -64,6 +72,35 @@ namespace SpellStaller
             bool ic = ModHooks.GetMod("ItemChangerMod") is Mod;
 
             RandoInterop.Hook();
+
+            On.PlayerData.CountCharms += CountOurCharms;
+
+            if (ModHooks.GetMod("DebugMod") != null)
+            {
+                try
+                {
+                    BindableFunctions.OnGiveAllCharms += () => {
+                        foreach (var c in Charms)
+                        {
+                            c.Value.GiveCharm();
+                        }
+
+                        PlayerData.instance.CountCharms();
+                    };
+                    BindableFunctions.OnRemoveAllCharms += () => {
+                        foreach (var c in Charms)
+                        {
+                            c.Value.TakeCharm();
+                        }
+
+                        PlayerData.instance.CountCharms();
+                    };
+                }
+                catch (MissingMethodException)
+                {
+                    LogWarn("DebugMod hooks for giving and removing charms are not available; those commands will not work on Transcendence charms. Updating DebugMod may fix this.");
+                }
+            }
 
             Log("Initialized");
         }

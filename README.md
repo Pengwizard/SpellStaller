@@ -7,5 +7,4 @@ A Hollow Knight mod that adds 3 charms:
 * Gorb's Memento - Disables your ability to dive.
 
 Known bugs:
-* None of these charms are considered charms for the sake of Salubra logic
 * All the charms will always cost 0
